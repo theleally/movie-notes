@@ -36,6 +36,22 @@ class MovieNotesController {
       tags
     });
   }
+
+  async delete(request, response) {
+    const { id } = request.params;
+
+    await knex("movie_notes").where({ id }).delete();
+
+    response.json();
+  }
+
+  async index(request, response) {
+    const { user_id, title } = request.query;
+
+    const movieNotes = await knex("movie_notes").where({ user_id }).whereLike("title", `%${title}%`).orderBy("title");
+
+    response.json(movieNotes);
+  }
 }
 
 module.exports = MovieNotesController;
